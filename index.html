@@ -76,13 +76,22 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
 </div>
 <section class="section"><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"><p class="empty-note">Aquí aparecerán los álbumes marcados como recuerdos de flores.</p></div></section>
 <button class="admin-toggle" id="adminToggle">Añadir fotografías</button>
-<section class="admin section" id="adminPanel">
-<div id="uploadBox"><h2 class="flower-heading">Añadir fotografías</h2><div class="admin-grid"><label class="field">Fecha del recuerdo<input id="albumDate" type="date"></label><label class="field">Fotografías<input id="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><label class="field"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label><button class="action" id="upload">Guardar álbum</button></div></div>
-<p class="status" id="adminStatus" role="status"></p>
-</section>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Álbum de fotografías">
 <div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><p class="photo-count" id="photoCount"></p></div>
+</div>
+<div class="modal" id="uploadModal" role="dialog" aria-modal="true" aria-label="Añadir fotografías">
+ <div class="dialog">
+  <button class="close" id="uploadClose" aria-label="Cerrar">×</button>
+  <h2 class="album-date">Añadir fotografías</h2>
+  <div class="admin-grid" style="display:grid;gap:13px;text-align:left">
+   <label class="field">Fecha del recuerdo<input id="albumDate" type="date"></label>
+   <label class="field">Fotografías<input id="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label>
+   <label class="field"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label>
+   <button class="action" id="upload">Guardar álbum</button>
+  </div>
+  <p class="status" id="adminStatus" role="status"></p>
+ </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -105,13 +114,20 @@ async function loadMonth(){
  state.albums=albums||[];state.photos=state.albums.flatMap(a=>(a.calendar_photos||[]).map(p=>({...p,album_date:a.album_date,is_flower_gift:a.is_flower_gift})));
  renderCalendar();renderFlowers();$('loading').hidden=true;
 }
-function startUploadForDate(key){
+function openUploadModal(key=''){
  $('albumDate').value=key;
- $('adminPanel').classList.add('open');
- $('adminStatus').textContent='Añadiendo fotografías al '+formatDate(key)+'.';
- $('adminPanel').scrollIntoView({behavior:'smooth',block:'center'});
- $('photos').focus({preventScroll:true});
+ $('photos').value='';
+ $('flowerGift').checked=false;
+ $('adminStatus').textContent=key?'Añadiendo fotografías al '+formatDate(key)+'.':'';
+ $('uploadModal').classList.add('open');
+ document.body.style.overflow='hidden';
+ $('uploadClose').focus();
 }
+function closeUploadModal(){
+ $('uploadModal').classList.remove('open');
+ document.body.style.overflow=$('modal').classList.contains('open')?'hidden':'';
+}
+function startUploadForDate(key){openUploadModal(key)}
 function renderCalendar(){
  const grid=$('calendar');grid.innerHTML='';
  const first=new Date(state.month.getFullYear(),state.month.getMonth(),1),offset=(first.getDay()+6)%7,last=new Date(state.month.getFullYear(),state.month.getMonth()+1,0).getDate();
@@ -144,9 +160,19 @@ function movePhoto(delta){state.activeIndex=(state.activeIndex+delta+state.activ
 $('prev').onclick=()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()-1,1);loadMonth()};
 $('next').onclick=()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()+1,1);loadMonth()};
 $('close').onclick=closeAlbum;$('back').onclick=()=>movePhoto(-1);$('forward').onclick=()=>movePhoto(1);
+$('uploadClose').onclick=closeUploadModal;
+$('uploadModal').addEventListener('click',e=>{if(e.target===$('uploadModal'))closeUploadModal()});
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeAlbum()});
-document.addEventListener('keydown',e=>{if(!$('modal').classList.contains('open'))return;if(e.key==='Escape')closeAlbum();if(e.key==='ArrowLeft')movePhoto(-1);if(e.key==='ArrowRight')movePhoto(1)});
-$('adminToggle').onclick=()=>$('adminPanel').classList.toggle('open');
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){
+  if($('uploadModal').classList.contains('open'))closeUploadModal();
+  else if($('modal').classList.contains('open'))closeAlbum();
+  return;
+ }
+ if(!$('modal').classList.contains('open'))return;
+ if(e.key==='ArrowLeft')movePhoto(-1);if(e.key==='ArrowRight')movePhoto(1);
+});
+$('adminToggle').onclick=()=>openUploadModal();
 $('upload').onclick=async()=>{
  const files=[...$('photos').files],date=$('albumDate').value;if(!date||!files.length){$('adminStatus').textContent='Selecciona una fecha y al menos una fotografía.';return}
  $('upload').disabled=true;$('adminStatus').textContent='Subiendo fotografías…';
@@ -155,7 +181,7 @@ $('upload').onclick=async()=>{
   const {data:existing}=await db.from('calendar_photos').select('sort_order').eq('album_id',album.id).order('sort_order',{ascending:false}).limit(1);
   let order=(existing?.[0]?.sort_order??-1)+1;
   for(const file of files){const safe=file.name.normalize('NFKD').replace(/[^a-zA-Z0-9._-]/g,'-');const path=album.id+'/'+Date.now()+'-'+order+'-'+safe;const {error:upError}=await db.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(upError)throw upError;const {error:rowError}=await db.from('calendar_photos').insert({album_id:album.id,storage_path:path,sort_order:order});if(rowError)throw rowError;order++}
-  $('adminStatus').textContent='Álbum guardado correctamente.';$('photos').value='';await loadMonth();
+  $('adminStatus').textContent='Álbum guardado correctamente.';$('photos').value='';await loadMonth();setTimeout(()=>closeUploadModal(),700);
  }catch(e){$('adminStatus').textContent='No se pudo guardar: '+e.message}finally{$('upload').disabled=false}
 };
 loadMonth();
