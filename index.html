@@ -61,7 +61,15 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .empty-note{padding:12px;text-align:center;color:#7b8795;font-size:.88rem}
 .admin{display:none;margin-top:14px;padding:15px;border-radius:12px;background:#f7f0d9}
 .admin.open{display:block}.admin-grid{display:flex;flex-wrap:wrap;gap:9px;align-items:end}.field{display:grid;gap:5px;font-size:.8rem}.field input{max-width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:white}
-.action{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:white}.action:disabled{opacity:.5;cursor:wait}.status{font-size:.82rem;margin:10px 0 0}
+.action{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:white}.action:disabled{opacity:.5;cursor:wait}.status{font-size:.82rem;margin:10px 0 0;color:var(--orange)}
+.upload-dialog .admin-grid{display:grid;gap:15px;justify-items:center;text-align:center;width:100%}
+.upload-dialog .album-date{margin:0 0 18px;text-align:center}
+.upload-file{display:block;width:min(100%,330px);margin:0 auto;text-align:center}
+.upload-file input{display:block;width:100%;margin:0 auto;padding:8px;border:1px solid rgba(223,135,62,.4);border-radius:4px;background:transparent;color:var(--orange);font:inherit;font-size:.82rem;text-align:center}
+.flower-choice{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--orange);font-size:.9rem}
+.flower-choice input{accent-color:var(--orange);margin:0}
+.upload-dialog .add-photos{margin:0 auto}
+.upload-dialog .status{text-align:center;width:100%}
 .modal{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(26,37,52,.72);backdrop-filter:blur(7px)}
 .modal.open{display:flex;animation:modalFade .2s ease}.dialog{position:relative;width:min(540px,100%);max-height:min(88vh,760px);overflow:auto;padding:25px 30px 30px;border:1px solid rgba(190,139,58,.38);border-radius:0;background:#fff9e9;box-shadow:0 25px 80px rgba(0,0,0,.3);text-align:center;animation:modalRise .28s ease}
 .close{position:absolute;right:15px;top:10px;width:auto;height:auto;padding:5px 9px;border:0;border-radius:0;background:transparent;color:#c98216;font-size:1.65rem;line-height:1}
@@ -135,15 +143,14 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 <div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer" id="photoViewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><div class="photo-count" id="photoCount" aria-live="polite"></div><button class="add-photos" id="addAlbumPhotos" type="button"><svg class="add-photo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 9v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 18V9A1.5 1.5 0 0 1 4 7.5Z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Añadir fotos</button></div>
 </div>
 <div class="modal" id="uploadModal" role="dialog" aria-modal="true" aria-label="Añadir fotografías">
- <div class="dialog">
+ <div class="dialog upload-dialog">
   <button class="close" id="uploadClose" aria-label="Cerrar">×</button>
-  <h2 class="album-date">Añadir fotografías</h2>
-  <p class="album-date" id="uploadDateDisplay"></p>
-  <div class="admin-grid" style="display:grid;gap:13px;text-align:center;justify-items:center">
+  <h2 class="album-date" id="uploadDateDisplay"></h2>
+  <div class="admin-grid">
    <input id="albumDate" type="hidden">
-   <label class="field" style="text-align:center">Fotografías<input id="photos" type="file" accept="image/*" multiple style="max-width:100%;margin:auto"></label>
-   <label class="field" style="text-align:center"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label>
-   <button class="action" id="upload">Subir</button>
+   <div class="upload-file"><input id="photos" type="file" accept="image/*" multiple aria-label="Seleccionar fotografías"></div>
+   <label class="flower-choice"><input id="flowerGift" type="checkbox"><span>❀ Recuerdo de flores</span></label>
+   <button class="add-photos" id="upload" type="button"><svg class="add-photo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 9v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 18V9A1.5 1.5 0 0 1 4 7.5Z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Subir fotos</button>
   </div>
   <p class="status" id="adminStatus" role="status"></p>
  </div>
@@ -186,7 +193,7 @@ async function loadMonth(){
 function openUploadModal(key=''){
  const selectedDate=key||dateKey(new Date());
  $('albumDate').value=selectedDate;
- $('uploadDateDisplay').textContent=formatDate(selectedDate);
+ {const [y,m,d]=selectedDate.split('-').map(Number);$('uploadDateDisplay').textContent=d+' de '+monthNames[m-1][0].toUpperCase()+monthNames[m-1].slice(1);}
  $('photos').value='';
  $('flowerGift').checked=false;
  $('adminStatus').textContent='';
