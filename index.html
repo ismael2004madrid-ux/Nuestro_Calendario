@@ -12,7 +12,7 @@
 :root{--blue:#315b91;--blue-dark:#24466f;--yellow:#f7df83;--orange:#df873e;--ink:#394b60;--line:rgba(61,88,119,.18)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;color:var(--ink);font-family:'Domine',Georgia,serif;background:#f7df83 url('assets/Plataforma%20estelar%20entre%20nubes%20doradas%20copia.png') center top/100% auto repeat-y fixed}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:'Domine',Georgia,serif;background-color:#f7df83;background-image:url('assets/Plataforma%20estelar%20entre%20nubes%20doradas%20copia.png');background-position:left top;background-size:100% 100%;background-repeat:no-repeat;background-attachment:scroll}
 button,input{font:inherit}button{cursor:pointer}
 .page{width:min(100% - 26px,1040px);margin:0 auto;padding:0 0 42px}
 .hero-scene{position:relative;width:100%;margin:0 auto 3px}
@@ -71,7 +71,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .arrow{flex:none;width:34px;height:42px;border:0;border-radius:20px;background:#f0dfaa;color:var(--blue);font-size:1.4rem}
 .photo-count{display:flex;justify-content:center;align-items:center;margin:12px 0 0;color:var(--orange);height:20px}.photo-progress{position:relative;display:flex;align-items:center;gap:8px;height:20px}.photo-dot{display:block;width:5px;height:5px;border-radius:50%;background:rgba(223,135,62,.58)}.photo-heart{position:absolute;left:calc(var(--index,0) * 13px - 4px);top:50%;transform:translateY(-54%);color:var(--orange);font-size:14px;line-height:1;transition:left .38s cubic-bezier(.2,.8,.2,1);pointer-events:none}
 .album-divider{height:1px;width:100%;margin:20px 0 13px;background:rgba(61,88,119,.24)}
-.add-photos{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:0 auto 12px;padding:6px 12px;border:1px solid var(--blue);border-radius:999px;background:transparent;color:var(--blue);font:inherit;font-size:14px;line-height:1.2;text-decoration:none;cursor:pointer;transition:background .2s,color .2s} .add-photos:hover{background:var(--blue);color:#fff9e9}
+.add-photos{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:0 auto 12px;padding:6px 12px;border:1px solid var(--blue);border-radius:999px;background:transparent;color:var(--blue);font:inherit;font-size:14px;line-height:1.2;text-decoration:none;cursor:pointer;transition:background .2s,color .2s} .add-photo-icon{width:15px;height:15px;display:block;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;flex:none} .add-photos:hover{background:var(--blue);color:#fff9e9}
 .album-date-numeric{display:none}
 @keyframes modalFade{from{opacity:0}to{opacity:1}}
 @keyframes modalRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -98,7 +98,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
  .album-divider{margin:17px 0 11px}
  .add-photos{font-size:13px;padding:6px 11px}
 }
-@media(min-width:900px){body{background-size:783px 1289px;background-repeat:repeat-y}}
+
 </style>
 </head>
 <body>
@@ -132,7 +132,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 <section class="flower-section" id="flowerSection" hidden><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"></div></section>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Álbum de fotografías">
-<div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer" id="photoViewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><div class="photo-count" id="photoCount" aria-live="polite"></div><div class="album-divider" aria-hidden="true"></div><button class="add-photos" id="addAlbumPhotos" type="button">📷 Añadir fotos</button></div>
+<div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer" id="photoViewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><div class="photo-count" id="photoCount" aria-live="polite"></div><div class="album-divider" aria-hidden="true"></div><button class="add-photos" id="addAlbumPhotos" type="button"><svg class="add-photo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 9v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 18V9A1.5 1.5 0 0 1 4 7.5Z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Añadir fotos</button></div>
 </div>
 <div class="modal" id="uploadModal" role="dialog" aria-modal="true" aria-label="Añadir fotografías">
  <div class="dialog">
