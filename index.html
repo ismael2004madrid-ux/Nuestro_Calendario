@@ -22,7 +22,8 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .title-mark{display:inline-block;margin:0 .12em;font-size:.88em;vertical-align:.04em;letter-spacing:0}
 .platform-art{display:block;width:100%;height:auto;max-height:390px;object-fit:contain;margin:0 auto;image-rendering:pixelated}
 .section{margin:18px 0;padding:16px 12px;background:rgba(255,250,220,.16);border:0;border-radius:0;box-shadow:none}
-.month-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 14px;padding:10px 0 0;border-top:2px solid rgba(213,145,38,.55)}
+.month-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 14px;padding:25px 0 0;border:0}
+.month-head::before{content:"";position:absolute;top:0;left:calc(50% - 50vw);width:100vw;height:1px;background:linear-gradient(90deg,transparent,rgba(213,145,38,.7) 8%,rgba(213,145,38,.7) 92%,transparent)}
 .month-title{margin:0;text-align:center;color:#c98216;font-size:clamp(1.25rem,4vw,1.8rem);font-weight:600;font-style:italic;text-transform:uppercase;letter-spacing:.04em}
 .month-subtitle{margin:-5px 0 14px;padding-bottom:0;border:0;text-align:center;color:#9e6d2b;font-size:clamp(.88rem,2.7vw,1.08rem);font-style:italic}
 .month-subtitle:empty{display:none}
@@ -40,7 +41,8 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .day.empty-selectable{cursor:pointer;transition:background .15s}
 .day.empty-selectable:active{background:rgba(247,223,131,.35)}
 .day-photo:focus-visible,.nav:focus-visible,.close:focus-visible{outline:3px solid #6c94c4;outline-offset:2px}
-.song-section{margin:24px auto 30px;padding:0 12px 30px;border-bottom:2px solid rgba(213,145,38,.7);text-align:center}
+.song-section{position:relative;margin:24px auto 30px;padding:0 12px 30px;border:0;text-align:center}
+.song-section::after{content:"";position:absolute;bottom:0;left:calc(50% - 50vw);width:100vw;height:1px;background:linear-gradient(90deg,transparent,rgba(213,145,38,.7) 8%,rgba(213,145,38,.7) 92%,transparent)}
 .song-heading{margin:0 0 16px;color:#c98216;font-size:clamp(1.05rem,3.8vw,1.35rem);font-style:italic}
 .spotify-player{display:block;width:min(100%,700px);height:152px;margin:0 auto;border:0;border-radius:14px;overflow:hidden}
 .together-section{padding:28px 8px 34px;text-align:center}
