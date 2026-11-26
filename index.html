@@ -38,6 +38,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .day-photo-placeholder{background:transparent;pointer-events:none}
 .day-number{align-self:center;color:#cf8617;font-size:clamp(.7rem,2vw,.95rem);font-weight:700;line-height:1;border:0;background:transparent;padding:3px 2px;cursor:pointer;font-family:inherit}
 .day-number-only{align-self:center;padding:3px 2px;color:#cf8617;font-size:clamp(.7rem,2vw,.95rem);font-weight:700}
+.day.special-day{border-color:var(--yellow);box-shadow:0 0 7px rgba(238,145,35,.58)}.day.special-day .day-number,.day.special-day .day-number-only{color:var(--yellow);text-shadow:0 2px 12px rgba(153,75,0,.82),0 0 28px rgba(238,145,35,.62)}
 .day.empty-selectable{cursor:pointer;transition:background .15s}
 .day.empty-selectable:active{background:rgba(247,223,131,.35)}
 .day-photo:focus-visible,.nav:focus-visible,.close:focus-visible{outline:3px solid #6c94c4;outline-offset:2px}
@@ -216,14 +217,15 @@ function renderCalendar(){
   for(let i=0;i<7;i++){
    const date=new Date(cursor),key=dateKey(date),day=date.getDate(),album=state.albums.find(a=>a.album_date===key),photos=(album?.calendar_photos||[]).sort((a,b)=>a.sort_order-b.sort_order);
    const cell=document.createElement('div');cell.className='day';
+   if(day===2)cell.classList.add('special-day');
    if(date.getMonth()!==state.month.getMonth())cell.classList.add('outside-month');
    if(photos.length){
     const b=document.createElement('button');b.className='day-photo';b.setAttribute('aria-label','Abrir álbum del '+formatDate(key));const img=document.createElement('img');img.src=publicPhoto(photos[0].storage_path);img.alt=photos[0].alt_text||'Recuerdo del '+formatDate(key);b.append(img);b.addEventListener('click',()=>openAlbum(album));cell.append(b);
-    const n=document.createElement('button');n.type='button';n.className='day-number';n.textContent=day;n.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));n.addEventListener('click',()=>startUploadForDate(key));cell.append(n);
+    const n=document.createElement('button');n.type='button';n.className='day-number';n.textContent=day===2?'♥':day;n.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));n.addEventListener('click',()=>startUploadForDate(key));cell.append(n);
    }else{
     cell.classList.add('empty-selectable');cell.setAttribute('role','button');cell.setAttribute('tabindex','0');cell.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));
     const placeholder=document.createElement('div');placeholder.className='day-photo day-photo-placeholder';placeholder.setAttribute('aria-hidden','true');cell.append(placeholder);
-    const n=document.createElement('span');n.className='day-number-only';n.textContent=day;cell.append(n);
+    const n=document.createElement('span');n.className='day-number-only';n.textContent=day===2?'♥':day;cell.append(n);
     cell.addEventListener('click',()=>startUploadForDate(key));
     cell.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();startUploadForDate(key)}});
    }
