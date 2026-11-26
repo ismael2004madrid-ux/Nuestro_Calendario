@@ -84,11 +84,12 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
  <div class="dialog">
   <button class="close" id="uploadClose" aria-label="Cerrar">×</button>
   <h2 class="album-date">Añadir fotografías</h2>
-  <div class="admin-grid" style="display:grid;gap:13px;text-align:left">
-   <label class="field">Fecha del recuerdo<input id="albumDate" type="date"></label>
-   <label class="field">Fotografías<input id="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label>
-   <label class="field"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label>
-   <button class="action" id="upload">Guardar álbum</button>
+  <p class="album-date" id="uploadDateDisplay"></p>
+  <div class="admin-grid" style="display:grid;gap:13px;text-align:center;justify-items:center">
+   <input id="albumDate" type="hidden">
+   <label class="field" style="text-align:center">Fotografías<input id="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="max-width:100%;margin:auto"></label>
+   <label class="field" style="text-align:center"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label>
+   <button class="action" id="upload">Subir</button>
   </div>
   <p class="status" id="adminStatus" role="status"></p>
  </div>
@@ -115,10 +116,12 @@ async function loadMonth(){
  renderCalendar();renderFlowers();$('loading').hidden=true;
 }
 function openUploadModal(key=''){
- $('albumDate').value=key;
+ const selectedDate=key||dateKey(new Date());
+ $('albumDate').value=selectedDate;
+ $('uploadDateDisplay').textContent=formatDate(selectedDate);
  $('photos').value='';
  $('flowerGift').checked=false;
- $('adminStatus').textContent=key?'Añadiendo fotografías al '+formatDate(key)+'.':'';
+ $('adminStatus').textContent='';
  $('uploadModal').classList.add('open');
  document.body.style.overflow='hidden';
  $('uploadClose').focus();
