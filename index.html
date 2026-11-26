@@ -65,8 +65,8 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .upload-dialog .admin-grid{display:grid;gap:15px;justify-items:center;text-align:center;width:100%}
 .upload-dialog .album-date{margin:0 0 18px;text-align:center}
 .upload-file{display:block;width:min(100%,330px);margin:0 auto;text-align:center}
-.upload-file input{display:block;width:100%;margin:0 auto;padding:5px;border:1px solid rgba(223,135,62,.4);border-radius:4px;background:transparent;color:var(--orange);font:inherit;font-size:.72rem;text-align:center}.upload-file input::file-selector-button{margin-right:7px;padding:4px 7px;border:1px solid rgba(223,135,62,.45);border-radius:3px;background:#f8e5c7;color:var(--orange);font:inherit;font-size:.72rem;cursor:pointer}.upload-file input::-webkit-file-upload-button{margin-right:7px;padding:4px 7px;border:1px solid rgba(223,135,62,.45);border-radius:3px;background:#f8e5c7;color:var(--orange);font:inherit;font-size:.72rem;cursor:pointer}
-.flower-choice{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--orange);font-size:.9rem}
+.upload-file input{display:block;width:100%;margin:0 auto;padding:5px;border:1px solid rgba(223,135,62,.55);border-radius:4px;background:transparent;color:var(--orange);font:inherit;font-size:.72rem;text-align:center}.upload-file input::file-selector-button{margin-right:7px;padding:4px 7px;border:1px solid var(--orange);border-radius:3px;background:var(--orange);color:#fff9e9;font:inherit;font-size:.72rem;cursor:pointer}.upload-file input::-webkit-file-upload-button{margin-right:7px;padding:4px 7px;border:1px solid var(--orange);border-radius:3px;background:var(--orange);color:#fff9e9;font:inherit;font-size:.72rem;cursor:pointer}
+.flower-choice{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--blue);font-size:.9rem}.flower-symbol{color:var(--blue);font-size:1.08em;line-height:1}
 .flower-choice input{accent-color:var(--orange);margin:0}
 .upload-dialog .add-photos{margin:0 auto}
 .upload-dialog .status{text-align:center;width:100%}
@@ -149,7 +149,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
   <div class="admin-grid">
    <input id="albumDate" type="hidden">
    <div class="upload-file"><input id="photos" type="file" accept="image/*" multiple aria-label="Seleccionar fotografías"></div>
-   <label class="flower-choice"><input id="flowerGift" type="checkbox"><span>❀ Recuerdo de flores</span></label>
+   <label class="flower-choice"><input id="flowerGift" type="checkbox"><span><span class="flower-symbol">✿</span> Recuerdo de flores</span></label>
    <button class="add-photos" id="upload" type="button"><svg class="add-photo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 9v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 18V9A1.5 1.5 0 0 1 4 7.5Z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Subir fotos</button>
   </div>
   <p class="status" id="adminStatus" role="status"></p>
