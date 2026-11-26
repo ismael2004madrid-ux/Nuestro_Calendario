@@ -47,7 +47,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .together-title{margin:0 0 7px;color:#c98216;font-size:clamp(1.35rem,4.5vw,2rem);font-weight:600}
 .together-date{margin:0 0 18px;color:#b77a25;font-size:clamp(.88rem,2.7vw,1.05rem)}
 .together-figures{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,760px);margin:0 auto}
-.together-kirby{width:clamp(68px,17vw,126px);height:clamp(68px,17vw,126px);object-fit:contain;image-rendering:pixelated;flex:none}
+.together-kirby{width:clamp(92px,22vw,160px);height:clamp(92px,22vw,160px);object-fit:contain;image-rendering:pixelated;flex:none}
 .return-button{display:flex;align-items:center;justify-content:center;flex:1;max-width:360px;min-height:82px;padding:14px 24px;border:2px solid rgba(201,130,22,.7);border-radius:60px;background:rgba(255,245,194,.18);color:#c98216;text-decoration:none;font-size:clamp(1.15rem,3.5vw,1.5rem);font-style:italic;font-weight:600;transition:background .2s}
 .return-button:hover{background:rgba(255,245,194,.55)}
 .flower-section{margin:10px 0 18px;padding:12px 8px;background:rgba(255,250,220,.16);border:0}
@@ -57,7 +57,6 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .flower-card{flex:0 0 116px;scroll-snap-align:start;border:1px solid var(--line);border-radius:5px;background:rgba(255,250,240,.7);padding:7px;text-align:center;color:var(--blue);font-size:.78rem}
 .flower-card img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;margin-bottom:7px}
 .empty-note{padding:12px;text-align:center;color:#7b8795;font-size:.88rem}
-.admin-toggle{display:block;margin:18px auto 0;border:0;background:transparent;color:#536f91;text-decoration:underline;font-size:.78rem}
 .admin{display:none;margin-top:14px;padding:15px;border-radius:12px;background:#f7f0d9}
 .admin.open{display:block}.admin-grid{display:flex;flex-wrap:wrap;gap:9px;align-items:end}.field{display:grid;gap:5px;font-size:.8rem}.field input{max-width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:white}
 .action{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:white}.action:disabled{opacity:.5;cursor:wait}.status{font-size:.82rem;margin:10px 0 0}
@@ -83,7 +82,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
  .spotify-player{height:152px}
  .together-section{padding:22px 10px 28px}
  .together-figures{gap:6px}
- .together-kirby{width:clamp(54px,16vw,86px);height:clamp(54px,16vw,86px)}
+ .together-kirby{width:clamp(72px,20vw,112px);height:clamp(72px,20vw,112px)}
  .return-button{min-height:66px;padding:10px 12px}
  .dialog{padding:16px 8px}
  .album-image{height:58vh}
@@ -109,7 +108,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 </section>
 <section class="song-section" aria-label="Canción del mes">
 <h2 class="song-heading">♫ Canción del mes ♫</h2>
-<iframe class="spotify-player" title="we fell in love in october — girl in red" src="https://open.spotify.com/embed/track/6IPwKM3fUUzlElbvKw2sKl?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<iframe class="spotify-player" id="monthlySong" title="Canción del mes" src="https://open.spotify.com/embed/track/6IPwKM3fUUzlElbvKw2sKl?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 </section>
 <section class="together-section" aria-label="Días juntos">
 <h2 class="together-title" id="togetherCount">Llevamos 0 días juntos</h2>
@@ -121,7 +120,6 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 </div>
 </section>
 <section class="flower-section" id="flowerSection" hidden><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"></div></section>
-<button class="admin-toggle" id="adminToggle">Añadir fotografías</button>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Álbum de fotografías">
 <div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><p class="photo-count" id="photoCount"></p></div>
@@ -148,6 +146,10 @@ const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const BUCKET='calendar-photos';
 const monthNames=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const monthSubtitles={'2026-10':'Recuerdos del paraíso','2026-11':'Ahora somos dos'};
+const monthSongs={
+ '2026-10':{title:'we fell in love in october — girl in red',id:'6IPwKM3fUUzlElbvKw2sKl'},
+ '2026-11':{title:'Tu jardín con enanitos — Melendi',id:'1qtf7do52k7NoZLs6Ys5Sr'}
+};
 const state={month:new Date(new Date().getFullYear(),new Date().getMonth(),1),albums:[],photos:[],activePhotos:[],activeIndex:0,previousFocus:null};
 const $=id=>document.getElementById(id);
 const dateKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
@@ -161,6 +163,10 @@ async function loadMonth(){
  const monthKey=state.month.getFullYear()+'-'+String(state.month.getMonth()+1).padStart(2,'0');
  $('monthTitle').textContent='❧ '+monthNames[state.month.getMonth()].toUpperCase()+' '+state.month.getFullYear()+' ❧';
  $('monthSubtitle').textContent=monthSubtitles[monthKey]||'';
+ const song=monthSongs[monthKey];
+ $('monthlySong').src=song?'https://open.spotify.com/embed/track/'+song.id+'?utm_source=generator':'';
+ $('monthlySong').title=song?song.title:'Canción del mes';
+ $('monthlySong').hidden=!song;
  $('loading').hidden=false;
  const {data:albums,error}=await db.from('calendar_albums').select('id,album_date,title,is_flower_gift,calendar_photos(id,storage_path,alt_text,sort_order)').gte('album_date',start).lte('album_date',end).order('album_date');
  if(error){$('loading').textContent='No se pudieron cargar los recuerdos. '+error.message;return}
