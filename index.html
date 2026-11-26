@@ -40,16 +40,22 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .day.empty-selectable{cursor:pointer;transition:background .15s}
 .day.empty-selectable:active{background:rgba(247,223,131,.35)}
 .day-photo:focus-visible,.nav:focus-visible,.close:focus-visible{outline:3px solid #6c94c4;outline-offset:2px}
-.below{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.feature{display:flex;align-items:center;gap:14px;min-height:118px}
-.feature img{width:90px;height:90px;object-fit:contain;flex:none}
-.counter-kirby{width:100px!important;height:100px!important;image-rendering:pixelated}
-.feature h2,.flower-heading{margin:0 0 7px;color:var(--blue);font-size:1.15rem}
-.feature p{margin:0;font-size:.9rem;line-height:1.55}
-.counter-image{max-width:100%;height:auto;max-height:75px;object-fit:contain;object-position:left center}
+.song-section{margin:24px auto 30px;padding:0 12px 30px;border-bottom:2px solid rgba(213,145,38,.7);text-align:center}
+.song-heading{margin:0 0 16px;color:#c98216;font-size:clamp(1.05rem,3.8vw,1.35rem);font-style:italic}
+.spotify-player{display:block;width:min(100%,700px);height:152px;margin:0 auto;border:0;border-radius:14px;overflow:hidden}
+.together-section{padding:28px 8px 34px;text-align:center}
+.together-title{margin:0 0 7px;color:#c98216;font-size:clamp(1.35rem,4.5vw,2rem);font-weight:600}
+.together-date{margin:0 0 18px;color:#b77a25;font-size:clamp(.88rem,2.7vw,1.05rem)}
+.together-figures{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,760px);margin:0 auto}
+.together-kirby{width:clamp(68px,17vw,126px);height:clamp(68px,17vw,126px);object-fit:contain;image-rendering:pixelated;flex:none}
+.return-button{display:flex;align-items:center;justify-content:center;flex:1;max-width:360px;min-height:82px;padding:14px 24px;border:2px solid rgba(201,130,22,.7);border-radius:60px;background:rgba(255,245,194,.18);color:#c98216;text-decoration:none;font-size:clamp(1.15rem,3.5vw,1.5rem);font-style:italic;font-weight:600;transition:background .2s}
+.return-button:hover{background:rgba(255,245,194,.55)}
+.flower-section{margin:10px 0 18px;padding:12px 8px;background:rgba(255,250,220,.16);border:0}
+.flower-section[hidden]{display:none}
+.flower-heading{margin:0 0 12px;color:var(--blue);font-size:1.15rem}
 .flower-strip{display:flex;gap:12px;overflow-x:auto;padding:5px 2px 10px;scroll-snap-type:x mandatory}
-.flower-card{flex:0 0 116px;scroll-snap-align:start;border:1px solid var(--line);border-radius:12px;background:rgba(255,250,240,.7);padding:7px;text-align:center;color:var(--blue);font-size:.78rem}
-.flower-card img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;margin-bottom:7px}
+.flower-card{flex:0 0 116px;scroll-snap-align:start;border:1px solid var(--line);border-radius:5px;background:rgba(255,250,240,.7);padding:7px;text-align:center;color:var(--blue);font-size:.78rem}
+.flower-card img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;margin-bottom:7px}
 .empty-note{padding:12px;text-align:center;color:#7b8795;font-size:.88rem}
 .admin-toggle{display:block;margin:18px auto 0;border:0;background:transparent;color:#536f91;text-decoration:underline;font-size:.78rem}
 .admin{display:none;margin-top:14px;padding:15px;border-radius:12px;background:#f7f0d9}
@@ -73,10 +79,12 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
  .calendar{gap:9px}
  .week-row{grid-template-columns:repeat(7,minmax(0,1fr))}
  .day-photo{height:clamp(38px,11vw,76px)}
- .below{grid-template-columns:1fr;gap:0}
- .feature{justify-content:center;text-align:left;border-top:1px solid rgba(213,145,38,.55);padding:16px 18px}
- .feature img{width:82px;height:82px}
- .counter-kirby{width:92px!important;height:92px!important}
+ .song-section{margin:18px auto 22px;padding:0 10px 24px}
+ .spotify-player{height:152px}
+ .together-section{padding:22px 10px 28px}
+ .together-figures{gap:6px}
+ .together-kirby{width:clamp(54px,16vw,86px);height:clamp(54px,16vw,86px)}
+ .return-button{min-height:66px;padding:10px 12px}
  .dialog{padding:16px 8px}
  .album-image{height:58vh}
  .arrow{width:28px}
@@ -99,11 +107,20 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 <div class="calendar" id="calendar"></div>
 <p class="empty-note" id="loading">Cargando vuestros recuerdos…</p>
 </section>
-<div class="below">
-<section class="section feature"><img src="assets/6723f53890d821aefdd3f3c2a4ed4c09.gif" alt="" onerror="this.hidden=true"><div><h2>La canción del mes</h2><p id="songText">Pronto podremos añadir aquí la canción que acompaña este mes.</p></div></section>
-<section class="section feature"><img class="counter-kirby" src="assets/163328.gif" alt="Kirby" onerror="this.hidden=true"><div><h2>Todos estos días juntos</h2><img class="counter-image" src="https://raw.githubusercontent.com/ismael2004madrid-ux/Nuestras_Cartas/main/contador.png" alt="Contador actualizado de días juntos"></div></section>
+<section class="song-section" aria-label="Canción del mes">
+<h2 class="song-heading">♫ Canción del mes ♫</h2>
+<iframe class="spotify-player" title="we fell in love in october — girl in red" src="https://open.spotify.com/embed/track/6IPwKM3fUUzlElbvKw2sKl?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</section>
+<section class="together-section" aria-label="Días juntos">
+<h2 class="together-title" id="togetherCount">Llevamos 0 días juntos</h2>
+<p class="together-date">Desde el 2 de octubre de 2026 ♥</p>
+<div class="together-figures">
+<img class="together-kirby" src="assets/163328.gif" alt="Kirby" onerror="this.hidden=true">
+<a class="return-button" id="returnButton" href="https://blancamia.wordpress.com/">Volver</a>
+<img class="together-kirby" src="assets/6723f53890d821aefdd3f3c2a4ed4c09.gif" alt="Kirby con auriculares" onerror="this.hidden=true">
 </div>
-<section class="section"><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"><p class="empty-note">Aquí aparecerán los álbumes marcados como recuerdos de flores.</p></div></section>
+</section>
+<section class="flower-section" id="flowerSection" hidden><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"></div></section>
 <button class="admin-toggle" id="adminToggle">Añadir fotografías</button>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Álbum de fotografías">
@@ -195,9 +212,17 @@ function renderCalendar(){
 function renderFlowers(){
  const strip=$('flowerStrip');strip.innerHTML='';
  const featured=state.albums.filter(a=>a.is_flower_gift&&(a.calendar_photos||[]).length).sort((a,b)=>a.album_date.localeCompare(b.album_date));
- if(!featured.length){strip.innerHTML='<p class="empty-note">Aquí aparecerán los álbumes marcados como recuerdos de flores.</p>';return}
+ $('flowerSection').hidden=!featured.length;
+ if(!featured.length)return;
  featured.forEach(a=>{const p=[...a.calendar_photos].sort((x,y)=>x.sort_order-y.sort_order)[0],b=document.createElement('button');b.className='flower-card';const img=document.createElement('img');img.src=publicPhoto(p.storage_path);img.alt='';const label=document.createElement('span');label.textContent=formatDate(a.album_date);b.append(img,label);b.addEventListener('click',()=>openAlbum(a));strip.append(b)})
 }
+function updateTogetherCounter(){
+ const start=new Date(2026,9,2);start.setHours(0,0,0,0);
+ const today=new Date();today.setHours(0,0,0,0);
+ const days=Math.max(0,Math.floor((today-start)/86400000));
+ $('togetherCount').textContent='Llevamos '+days+' días juntos';
+}
+
 function openAlbum(album){state.activePhotos=[...(album.calendar_photos||[])].sort((a,b)=>a.sort_order-b.sort_order);state.activeIndex=0;state.previousFocus=document.activeElement;$('albumDateTitle').textContent=formatDate(album.album_date);$('modal').classList.add('open');document.body.style.overflow='hidden';showPhoto();$('close').focus()}
 function showPhoto(){const p=state.activePhotos[state.activeIndex];if(!p)return;$('albumImage').src=publicPhoto(p.storage_path);$('albumImage').alt=p.alt_text||'Fotografía '+(state.activeIndex+1);$('photoCount').textContent=(state.activeIndex+1)+' | '+state.activePhotos.length;$('back').disabled=state.activePhotos.length<2;$('forward').disabled=state.activePhotos.length<2}
 function closeAlbum(){$('modal').classList.remove('open');document.body.style.overflow='';if(state.previousFocus)state.previousFocus.focus()}
@@ -229,6 +254,7 @@ $('upload').onclick=async()=>{
   $('adminStatus').textContent='Álbum guardado correctamente.';$('photos').value='';await loadMonth();setTimeout(()=>closeUploadModal(),700);
  }catch(e){$('adminStatus').textContent='No se pudo guardar: '+e.message}finally{$('upload').disabled=false}
 };
+updateTogetherCounter();
 loadMonth();
 </script>
 </body>
