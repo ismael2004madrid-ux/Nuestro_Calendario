@@ -75,10 +75,9 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
 <section class="section feature"><img class="counter-kirby" src="assets/163328.gif" alt="Kirby" onerror="this.hidden=true"><div><h2>Todos estos días juntos</h2><img class="counter-image" src="https://raw.githubusercontent.com/ismael2004madrid-ux/Nuestras_Cartas/main/contador.png" alt="Contador actualizado de días juntos"></div></section>
 </div>
 <section class="section"><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"><p class="empty-note">Aquí aparecerán los álbumes marcados como recuerdos de flores.</p></div></section>
-<button class="admin-toggle" id="adminToggle">Acceso privado · gestionar recuerdos</button>
+<button class="admin-toggle" id="adminToggle">Añadir fotografías</button>
 <section class="admin section" id="adminPanel">
-<div id="loginBox"><h2 class="flower-heading">Acceso privado</h2><div class="admin-grid"><label class="field">Correo<input id="email" type="email" autocomplete="username"></label><label class="field">Contraseña<input id="password" type="password" autocomplete="current-password"></label><button class="action" id="login">Entrar</button></div></div>
-<div id="uploadBox" hidden><h2 class="flower-heading">Añadir fotografías</h2><div class="admin-grid"><label class="field">Fecha del recuerdo<input id="albumDate" type="date"></label><label class="field">Fotografías<input id="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><label class="field"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label><button class="action" id="upload">Guardar álbum</button><button class="action" id="logout" type="button">Cerrar sesión</button></div></div>
+<div id="loginBox"><h2 class="flower-heading"><div id="uploadBox"><h2 class="flower-heading">Añadir fotografías</h2><div class="admin-grid"><label class="field">Fecha del recuerdo<input id="albumDate" type="date"></label><label class="field">Fotografías<input id="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><label class="field"><span><input id="flowerGift" type="checkbox"> Recuerdo de flores</span></label><button class="action" id="upload">Guardar álbum</button></div></div>
 <p class="status" id="adminStatus" role="status"></p>
 </section>
 </main>
@@ -134,9 +133,6 @@ $('close').onclick=closeAlbum;$('back').onclick=()=>movePhoto(-1);$('forward').o
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeAlbum()});
 document.addEventListener('keydown',e=>{if(!$('modal').classList.contains('open'))return;if(e.key==='Escape')closeAlbum();if(e.key==='ArrowLeft')movePhoto(-1);if(e.key==='ArrowRight')movePhoto(1)});
 $('adminToggle').onclick=()=>$('adminPanel').classList.toggle('open');
-async function refreshAuth(){const {data:{session}}=await db.auth.getSession();$('loginBox').hidden=!!session;$('uploadBox').hidden=!session}
-$('login').onclick=async()=>{const {error}=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});$('adminStatus').textContent=error?error.message:'Sesión iniciada.';await refreshAuth()};
-$('logout').onclick=async()=>{await db.auth.signOut();$('adminStatus').textContent='Sesión cerrada.';refreshAuth()};
 $('upload').onclick=async()=>{
  const files=[...$('photos').files],date=$('albumDate').value;if(!date||!files.length){$('adminStatus').textContent='Selecciona una fecha y al menos una fotografía.';return}
  $('upload').disabled=true;$('adminStatus').textContent='Subiendo fotografías…';
@@ -148,8 +144,7 @@ $('upload').onclick=async()=>{
   $('adminStatus').textContent='Álbum guardado correctamente.';$('photos').value='';await loadMonth();
  }catch(e){$('adminStatus').textContent='No se pudo guardar: '+e.message}finally{$('upload').disabled=false}
 };
-db.auth.onAuthStateChange(()=>refreshAuth());
-loadMonth();refreshAuth();
+loadMonth();
 </script>
 </body>
 </html>
