@@ -10,11 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Domine:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 :root{--blue:#315b91;--blue-dark:#24466f;--yellow:#f7df83;--orange:#df873e;--ink:#394b60;--paper:rgba(255,252,239,.92);--line:rgba(61,88,119,.18)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--ink);font-family:'Domine',Georgia,serif;background:#f7df83 url('assets/calendar-background.png') center top/100% auto repeat-y fixed}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--ink);font-family:'Domine',Georgia,serif;background:#f7df83 url('assets/background.png') center top/100% auto repeat-y fixed}
 button,input{font:inherit}button{cursor:pointer}
 .page{width:min(100% - 26px,1040px);margin:0 auto;padding:24px 0 46px}
 .hero{position:relative;overflow:hidden;text-align:center;padding:22px 18px 18px;border:1px solid rgba(255,255,255,.65);border-radius:22px;background:rgba(255,246,197,.68);box-shadow:0 8px 28px rgba(104,84,37,.10)}
-.hero-gif{display:block;width:min(100%,665px);height:clamp(130px,35vw,255px);object-fit:cover;object-position:center;border-radius:15px;margin:0 auto 14px}
+ .hero-gif{display:none}.platform-art{display:block;width:min(100%,665px);height:auto;max-height:190px;object-fit:contain;margin:12px auto -4px;image-rendering:pixelated}.counter-kirby{width:76px;height:76px;object-fit:contain;flex:none;image-rendering:pixelated}
 h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:600;font-style:italic;letter-spacing:.025em;text-transform:uppercase;text-shadow:0 2px rgba(255,255,255,.8)}
 .subtitle{margin:0;color:#5b6f8a;font-size:clamp(.95rem,2.8vw,1.15rem);font-style:italic}
 .section{margin:20px 0;padding:20px;background:var(--paper);border:1px solid rgba(255,255,255,.8);border-radius:20px;box-shadow:0 8px 28px rgba(104,84,37,.09);backdrop-filter:blur(5px)}
@@ -59,7 +59,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
 <body>
 <main class="page">
 <header class="hero">
-<img class="hero-gif" src="assets/kirby-sunset.gif" alt="Kirby en un paisaje de atardecer" onerror="this.hidden=true">
+
 <h1>Nuestro calendario</h1>
 <p class="subtitle">Un pequeño diario de todos los días que queremos recordar.</p>
 </header>
@@ -71,7 +71,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
 </section>
 <div class="below">
 <section class="section feature"><img src="assets/kirby-headphones.gif" alt="" onerror="this.hidden=true"><div><h2>La canción del mes</h2><p id="songText">Pronto podremos añadir aquí la canción que acompaña este mes.</p></div></section>
-<section class="section feature"><div><h2>Todos estos días juntos</h2><img class="counter-image" src="https://raw.githubusercontent.com/ismael2004madrid-ux/Nuestras_Cartas/main/contador.png" alt="Contador actualizado de días juntos"></div></section>
+<section class="section feature"><img class="counter-kirby" src="assets/kirby-pink.gif" alt="Kirby" onerror="this.hidden=true"><div><h2>Todos estos días juntos</h2><img class="counter-image" src="https://raw.githubusercontent.com/ismael2004madrid-ux/Nuestras_Cartas/main/contador.png" alt="Contador actualizado de días juntos"></div></section>
 </div>
 <section class="section"><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"><p class="empty-note">Aquí aparecerán los álbumes marcados como recuerdos de flores.</p></div></section>
 <button class="admin-toggle" id="adminToggle">Acceso privado · gestionar recuerdos</button>
