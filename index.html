@@ -22,6 +22,8 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.7rem,6vw,2.8rem);font-weight
 .section{margin:18px 0;padding:16px 12px;background:rgba(255,250,220,.16);border:0;border-radius:0;box-shadow:none}
 .month-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 14px;padding-bottom:9px;border-bottom:2px solid rgba(213,145,38,.55)}
 .month-title{margin:0;text-align:center;color:#c98216;font-size:clamp(1.25rem,4vw,1.8rem);font-weight:600;font-style:italic;text-transform:uppercase;letter-spacing:.04em}
+.month-subtitle{margin:-5px 0 14px;text-align:center;color:#9e6d2b;font-size:clamp(.88rem,2.7vw,1.08rem);font-style:italic}
+.month-subtitle:empty{display:none}
 .nav{width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,248,223,.5);color:#c98216;font-size:1.5rem}
 .weekdays{display:none}
 .calendar{display:flex;flex-direction:column;gap:12px}
@@ -30,6 +32,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.7rem,6vw,2.8rem);font-weight
 .day.outside-month{opacity:.82}
 .day-photo{display:block;width:100%;height:clamp(48px,10vw,112px);border:0;padding:0;background:rgba(255,255,255,.12);border-radius:0;overflow:hidden}
 .day-photo img{width:100%;height:100%;display:block;object-fit:cover}
+.day-photo-placeholder{background:transparent;pointer-events:none}
 .day-number{align-self:center;color:#cf8617;font-size:clamp(.7rem,2vw,.95rem);font-weight:700;line-height:1;border:0;background:transparent;padding:3px 2px;cursor:pointer;font-family:inherit}
 .day-number-only{align-self:center;padding:3px 2px;color:#cf8617;font-size:clamp(.7rem,2vw,.95rem);font-weight:700}
 .day.empty-selectable{cursor:pointer;transition:background .15s}
@@ -89,6 +92,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.7rem,6vw,2.8rem);font-weight
 <img class="platform-art" src="assets/289b8d2dad2ec024807e4cab0375d405.gif" alt="Kirby sobre una plataforma al atardecer" onerror="this.hidden=true">
 <section class="section" aria-label="Calendario mensual">
 <div class="month-head"><button class="nav" id="prev" aria-label="Mes anterior">‹</button><h2 class="month-title" id="monthTitle">Cargando…</h2><button class="nav" id="next" aria-label="Mes siguiente">›</button></div>
+<p class="month-subtitle" id="monthSubtitle"></p>
 <div class="calendar" id="calendar"></div>
 <p class="empty-note" id="loading">Cargando vuestros recuerdos…</p>
 </section>
@@ -123,6 +127,7 @@ const SUPABASE_KEY='sb_publishable_xP9Wp_eBQlVaRijr-oZ4Ug_WyFhwoCa';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const BUCKET='calendar-photos';
 const monthNames=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const monthSubtitles={'2026-10':'Recuerdos del paraíso','2026-11':'Ahora somos dos'};
 const state={month:new Date(new Date().getFullYear(),new Date().getMonth(),1),albums:[],photos:[],activePhotos:[],activeIndex:0,previousFocus:null};
 const $=id=>document.getElementById(id);
 const dateKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
@@ -133,7 +138,9 @@ async function loadMonth(){
  const visibleStart=new Date(first);visibleStart.setDate(first.getDate()-offset);
  const visibleEnd=new Date(last);visibleEnd.setDate(last.getDate()+(6-((last.getDay()+6)%7)));
  const start=dateKey(visibleStart),end=dateKey(visibleEnd);
- $('monthTitle').textContent='❧ '+monthNames[state.month.getMonth()].toUpperCase()+' ❧ '+state.month.getFullYear();
+ const monthKey=state.month.getFullYear()+'-'+String(state.month.getMonth()+1).padStart(2,'0');
+ $('monthTitle').textContent='❧ '+monthNames[state.month.getMonth()].toUpperCase()+' '+state.month.getFullYear()+' ❧';
+ $('monthSubtitle').textContent=monthSubtitles[monthKey]||'';
  $('loading').hidden=false;
  const {data:albums,error}=await db.from('calendar_albums').select('id,album_date,title,is_flower_gift,calendar_photos(id,storage_path,alt_text,sort_order)').gte('album_date',start).lte('album_date',end).order('album_date');
  if(error){$('loading').textContent='No se pudieron cargar los recuerdos. '+error.message;return}
@@ -172,6 +179,7 @@ function renderCalendar(){
     const n=document.createElement('button');n.type='button';n.className='day-number';n.textContent=day;n.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));n.addEventListener('click',()=>startUploadForDate(key));cell.append(n);
    }else{
     cell.classList.add('empty-selectable');cell.setAttribute('role','button');cell.setAttribute('tabindex','0');cell.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));
+    const placeholder=document.createElement('div');placeholder.className='day-photo day-photo-placeholder';placeholder.setAttribute('aria-hidden','true');cell.append(placeholder);
     const n=document.createElement('span');n.className='day-number-only';n.textContent=day;cell.append(n);
     cell.addEventListener('click',()=>startUploadForDate(key));
     cell.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();startUploadForDate(key)}});
