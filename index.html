@@ -248,7 +248,7 @@ $('next').onclick=()=>{state.month=new Date(state.month.getFullYear(),state.mont
 $('close').onclick=closeAlbum;$('back').onclick=()=>movePhoto(-1);$('forward').onclick=()=>movePhoto(1);$('addAlbumPhotos').onclick=()=>openUploadModal(state.activeAlbumDate);
 let swipeStartX=null,swipeStartY=null;
 $('photoViewer').addEventListener('touchstart',e=>{if(e.touches.length!==1)return;swipeStartX=e.touches[0].clientX;swipeStartY=e.touches[0].clientY},{passive:true});
-$('photoViewer').addEventListener('touchend',e=>{if(swipeStartX===null||!e.changedTouches.length)return;const dx=e.changedTouches[0].clientX-swipeStartX,dy=e.changedTouches[0].clientY-swipeStartY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.25&&state.activePhotos.length>1)movePhoto(dx<0?1:-1);swipeStartX=null;swipeStartY=null},{passive:true});
+$('photoViewer').addEventListener('touchend',e=>{if(swipeStartX===null||!e.changedTouches.length)return;const touch=e.changedTouches[0],dx=touch.clientX-swipeStartX,dy=touch.clientY-swipeStartY;if(state.activePhotos.length>1){if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.25){movePhoto(dx<0?1:-1)}else if(Math.abs(dx)<12&&Math.abs(dy)<12){const imageRect=$('albumImage').getBoundingClientRect();if(touch.clientX>=imageRect.left&&touch.clientX<=imageRect.right&&touch.clientY>=imageRect.top&&touch.clientY<=imageRect.bottom)movePhoto(touch.clientX<imageRect.left+imageRect.width/2?-1:1)}}swipeStartX=null;swipeStartY=null},{passive:true});
 $('uploadClose').onclick=closeUploadModal;
 $('uploadModal').addEventListener('click',e=>{if(e.target===$('uploadModal'))closeUploadModal()});
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeAlbum()});
