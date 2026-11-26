@@ -248,7 +248,7 @@ document.addEventListener('keydown',e=>{
  if(!$('modal').classList.contains('open'))return;
  if(e.key==='ArrowLeft')movePhoto(-1);if(e.key==='ArrowRight')movePhoto(1);
 });
-$('adminToggle').onclick=()=>openUploadModal();
+
 $('upload').onclick=async()=>{
  const files=[...$('photos').files],date=$('albumDate').value;if(!date||!files.length){$('adminStatus').textContent='Selecciona una fecha y al menos una fotografía.';return}
  $('upload').disabled=true;$('adminStatus').textContent='Subiendo fotografías…';
