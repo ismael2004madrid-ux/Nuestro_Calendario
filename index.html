@@ -38,7 +38,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .day-photo-placeholder{background:transparent;pointer-events:none}
 .day-number{align-self:center;color:#cf8617;font-size:clamp(.7rem,2vw,.95rem);font-weight:700;line-height:1;border:0;background:transparent;padding:3px 2px;cursor:pointer;font-family:inherit}
 .day-number-only{align-self:center;padding:3px 2px;color:#cf8617;font-size:clamp(.7rem,2vw,.95rem);font-weight:700}
-.day.special-day{border-color:var(--yellow);box-shadow:0 0 7px rgba(238,145,35,.58)}.day.special-day .day-number,.day.special-day .day-number-only{color:var(--yellow);text-shadow:0 2px 12px rgba(153,75,0,.82),0 0 28px rgba(238,145,35,.62)}
+.day.special-day{border-color:var(--yellow);box-shadow:0 0 7px rgba(238,145,35,.58)}.day.special-day .day-number,.day.special-day .day-number-only{color:var(--yellow);-webkit-text-stroke:1px var(--orange);paint-order:stroke fill;text-shadow:0 2px 12px rgba(153,75,0,.82),0 0 28px rgba(238,145,35,.62)}
 .day.empty-selectable{cursor:pointer;transition:background .15s}
 .day.empty-selectable:active{background:rgba(247,223,131,.35)}
 .day-photo:focus-visible,.nav:focus-visible,.close:focus-visible{outline:3px solid #6c94c4;outline-offset:2px}
