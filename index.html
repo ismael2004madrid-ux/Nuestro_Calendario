@@ -14,8 +14,8 @@
 button,input{font:inherit}button{cursor:pointer}
 .page{width:min(100% - 26px,1040px);margin:0 auto;padding:24px 0 46px}
 .hero{position:relative;overflow:hidden;text-align:center;padding:22px 18px 18px;border:1px solid rgba(255,255,255,.65);border-radius:22px;background:rgba(255,246,197,.68);box-shadow:0 8px 28px rgba(104,84,37,.10)}
- .hero-gif{display:none}.platform-art{display:block;width:min(100%,665px);height:auto;max-height:190px;object-fit:contain;margin:12px auto -4px;image-rendering:pixelated}.counter-kirby{width:76px;height:76px;object-fit:contain;flex:none;image-rendering:pixelated}
-h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:600;font-style:italic;letter-spacing:.025em;text-transform:uppercase;text-shadow:0 2px rgba(255,255,255,.8)}
+.hero-gif{display:none}.platform-art{display:block;width:100%;height:auto;max-height:245px;object-fit:contain;margin:0 auto 2px;image-rendering:pixelated}.counter-kirby{width:100px;height:100px;object-fit:contain;flex:none;image-rendering:pixelated}
+h1{margin:5px 0;color:var(--blue);font-size:clamp(1.65rem,6vw,2.7rem);font-weight:600;font-style:italic;letter-spacing:.025em;text-transform:uppercase;text-shadow:0 2px rgba(255,255,255,.8)}
 .subtitle{margin:0;color:#5b6f8a;font-size:clamp(.95rem,2.8vw,1.15rem);font-style:italic}
 .section{margin:20px 0;padding:20px;background:var(--paper);border:1px solid rgba(255,255,255,.8);border-radius:20px;box-shadow:0 8px 28px rgba(104,84,37,.09);backdrop-filter:blur(5px)}
 .month-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
@@ -52,7 +52,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
 .album-image{width:min(100%,360px);height:min(62vh,480px);aspect-ratio:3/4;object-fit:contain;background:#eee5d2;border-radius:8px}
 .arrow{flex:none;width:34px;height:42px;border:0;border-radius:20px;background:#f0dfaa;color:var(--blue);font-size:1.4rem}
 .photo-count{margin:12px 0 0;color:#69788b;font-size:.85rem}
-@media(max-width:650px){body{background-attachment:scroll}.page{width:min(100% - 16px,1040px);padding-top:9px}.hero{padding:12px 10px;border-radius:16px}.section{padding:12px 9px;margin:12px 0;border-radius:15px}.weekdays,.calendar{gap:3px}.day{min-height:60px;padding:3px 2px;border-radius:7px}.day-photo{height:clamp(38px,11vw,70px);border-radius:4px}.below{grid-template-columns:1fr;gap:0}.feature img{width:76px;height:76px}.dialog{padding:16px 8px}.album-image{height:58vh}.arrow{width:28px}}
+@media(max-width:650px){body{background-attachment:scroll}.page{width:100%;padding:5px 0 32px}.hero{padding:9px 10px 0}.platform-art{width:100%;max-height:none;margin:0 auto 0}.section{padding:12px 8px;margin:10px 0;border-radius:0}.month-head{margin:0 8px 12px}.calendar{gap:9px}.week-row{grid-template-columns:repeat(7,minmax(0,1fr))}.day-photo{height:clamp(38px,11vw,76px)}.below{grid-template-columns:1fr;gap:0}.feature{justify-content:center;text-align:left;border-top:1px solid rgba(213,145,38,.55);padding:16px 18px}.feature img{width:82px;height:82px}.dialog{padding:16px 8px}.album-image{height:58vh}.arrow{width:28px}}
 @media(min-width:900px){body{background-size:783px 1289px;background-repeat:repeat-y}.hero-gif{height:250px}}
 </style>
 </head>
@@ -66,7 +66,6 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(2rem,7vw,3.4rem);font-weight:6
 <img class="platform-art" src="assets/289b8d2dad2ec024807e4cab0375d405.gif" alt="Kirby sobre una plataforma al atardecer" onerror="this.hidden=true">
 <section class="section" aria-label="Calendario mensual">
 <div class="month-head"><button class="nav" id="prev" aria-label="Mes anterior">‹</button><h2 class="month-title" id="monthTitle">Cargando…</h2><button class="nav" id="next" aria-label="Mes siguiente">›</button></div>
-<div class="weekdays"><div class="weekday">LUN</div><div class="weekday">MAR</div><div class="weekday">MIÉ</div><div class="weekday">JUE</div><div class="weekday">VIE</div><div class="weekday">SÁB</div><div class="weekday">DOM</div></div>
 <div class="calendar" id="calendar"></div>
 <p class="empty-note" id="loading">Cargando vuestros recuerdos…</p>
 </section>
@@ -107,8 +106,11 @@ const dateKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(
 const formatDate=s=>{const [y,m,d]=s.split('-').map(Number);return d+' de '+monthNames[m-1][0].toUpperCase()+monthNames[m-1].slice(1)+' de '+y};
 function publicPhoto(path){return db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl}
 async function loadMonth(){
- const start=dateKey(state.month),endDate=new Date(state.month.getFullYear(),state.month.getMonth()+1,0),end=dateKey(endDate);
- $('monthTitle').textContent=monthNames[state.month.getMonth()][0].toUpperCase()+monthNames[state.month.getMonth()].slice(1)+' de '+state.month.getFullYear();
+ const first=new Date(state.month.getFullYear(),state.month.getMonth(),1),offset=(first.getDay()+6)%7,last=new Date(state.month.getFullYear(),state.month.getMonth()+1,0);
+ const visibleStart=new Date(first);visibleStart.setDate(first.getDate()-offset);
+ const visibleEnd=new Date(last);visibleEnd.setDate(last.getDate()+(6-((last.getDay()+6)%7)));
+ const start=dateKey(visibleStart),end=dateKey(visibleEnd);
+ $('monthTitle').textContent='❧ '+monthNames[state.month.getMonth()].toUpperCase()+' ❧ '+state.month.getFullYear();
  $('loading').hidden=false;
  const {data:albums,error}=await db.from('calendar_albums').select('id,album_date,title,is_flower_gift,calendar_photos(id,storage_path,alt_text,sort_order)').gte('album_date',start).lte('album_date',end).order('album_date');
  if(error){$('loading').textContent='No se pudieron cargar los recuerdos. '+error.message;return}
@@ -133,21 +135,27 @@ function closeUploadModal(){
 function startUploadForDate(key){openUploadModal(key)}
 function renderCalendar(){
  const grid=$('calendar');grid.innerHTML='';
- const first=new Date(state.month.getFullYear(),state.month.getMonth(),1),offset=(first.getDay()+6)%7,last=new Date(state.month.getFullYear(),state.month.getMonth()+1,0).getDate();
- for(let i=0;i<offset;i++){const e=document.createElement('div');e.className='day empty';grid.append(e)}
- for(let day=1;day<=last;day++){
-  const date=new Date(state.month.getFullYear(),state.month.getMonth(),day),key=dateKey(date),album=state.albums.find(a=>a.album_date===key),photos=(album?.calendar_photos||[]).sort((a,b)=>a.sort_order-b.sort_order);
-  const cell=document.createElement('div');cell.className='day';
-  if(photos.length){
-   const b=document.createElement('button');b.className='day-photo';b.setAttribute('aria-label','Abrir álbum del '+formatDate(key));const img=document.createElement('img');img.src=publicPhoto(photos[0].storage_path);img.alt=photos[0].alt_text||'Recuerdo del '+formatDate(key);b.append(img);b.addEventListener('click',()=>openAlbum(album));cell.append(b);
-   const n=document.createElement('button');n.type='button';n.className='day-number';n.textContent=day;n.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));n.addEventListener('click',()=>startUploadForDate(key));cell.append(n);
-  }else{
-   cell.classList.add('empty-selectable');cell.setAttribute('role','button');cell.setAttribute('tabindex','0');cell.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));
-   const n=document.createElement('span');n.className='day-number-only';n.textContent=day;cell.append(n);
-   cell.addEventListener('click',()=>startUploadForDate(key));
-   cell.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();startUploadForDate(key)}});
+ const first=new Date(state.month.getFullYear(),state.month.getMonth(),1),offset=(first.getDay()+6)%7,last=new Date(state.month.getFullYear(),state.month.getMonth()+1,0);
+ const start=new Date(first);start.setDate(first.getDate()-offset);
+ const end=new Date(last);end.setDate(last.getDate()+(6-((last.getDay()+6)%7)));
+ for(let cursor=new Date(start);cursor<=end;){
+  const week=document.createElement('div');week.className='week-row';
+  for(let i=0;i<7;i++){
+   const date=new Date(cursor),key=dateKey(date),day=date.getDate(),album=state.albums.find(a=>a.album_date===key),photos=(album?.calendar_photos||[]).sort((a,b)=>a.sort_order-b.sort_order);
+   const cell=document.createElement('div');cell.className='day';
+   if(date.getMonth()!==state.month.getMonth())cell.classList.add('outside-month');
+   if(photos.length){
+    const b=document.createElement('button');b.className='day-photo';b.setAttribute('aria-label','Abrir álbum del '+formatDate(key));const img=document.createElement('img');img.src=publicPhoto(photos[0].storage_path);img.alt=photos[0].alt_text||'Recuerdo del '+formatDate(key);b.append(img);b.addEventListener('click',()=>openAlbum(album));cell.append(b);
+    const n=document.createElement('button');n.type='button';n.className='day-number';n.textContent=day;n.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));n.addEventListener('click',()=>startUploadForDate(key));cell.append(n);
+   }else{
+    cell.classList.add('empty-selectable');cell.setAttribute('role','button');cell.setAttribute('tabindex','0');cell.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));
+    const n=document.createElement('span');n.className='day-number-only';n.textContent=day;cell.append(n);
+    cell.addEventListener('click',()=>startUploadForDate(key));
+    cell.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();startUploadForDate(key)}});
+   }
+   week.append(cell);cursor.setDate(cursor.getDate()+1);
   }
-  grid.append(cell);
+  grid.append(week);
  }
 }
 function renderFlowers(){
