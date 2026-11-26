@@ -50,7 +50,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .together-date{margin:0 0 18px;color:#b77a25;font-size:clamp(.88rem,2.7vw,1.05rem)}
 .together-figures{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,760px);margin:0 auto}
 .together-kirby{width:clamp(92px,22vw,160px);height:clamp(92px,22vw,160px);object-fit:contain;image-rendering:pixelated;flex:none}
-.return-button{display:flex;align-items:center;justify-content:center;flex:0 1 220px;max-width:220px;min-height:58px;padding:9px 18px;border:2px solid rgba(201,130,22,.7);border-radius:60px;background:rgba(255,245,194,.18);color:#c98216;text-decoration:none;font-size:clamp(1rem,3vw,1.2rem);font-style:italic;font-weight:600;transition:background .2s}
+.return-button{display:flex;align-items:center;justify-content:center;flex:0 1 160px;max-width:160px;min-height:46px;padding:7px 14px;border:1.5px solid rgba(201,130,22,.7);border-radius:60px;background:rgba(255,245,194,.18);color:#c98216;text-decoration:none;font-size:clamp(.88rem,2.5vw,1.02rem);font-style:italic;font-weight:600;transition:background .2s}
 .return-button:hover{background:rgba(255,245,194,.55)}
 .flower-section{margin:10px 0 18px;padding:12px 8px;background:rgba(255,250,220,.16);border:0}
 .flower-section[hidden]{display:none}
@@ -69,10 +69,10 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 .viewer{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;touch-action:pan-y}
 .album-image{width:min(100%,360px);height:min(62vh,480px);aspect-ratio:3/4;object-fit:contain;background:#eee5d2;border-radius:8px}
 .arrow{flex:none;width:34px;height:42px;border:0;border-radius:20px;background:#f0dfaa;color:var(--blue);font-size:1.4rem}
-.photo-count{margin:12px 0 0;color:var(--orange);font-size:.78rem;letter-spacing:.1em}
+.photo-count{display:flex;justify-content:center;align-items:center;margin:12px 0 0;color:var(--orange);height:20px}.photo-progress{position:relative;display:flex;align-items:center;gap:8px;height:20px}.photo-dot{display:block;width:5px;height:5px;border-radius:50%;background:rgba(223,135,62,.58)}.photo-heart{position:absolute;left:calc(var(--index,0) * 13px - 4px);top:50%;transform:translateY(-54%);color:var(--orange);font-size:14px;line-height:1;transition:left .38s cubic-bezier(.2,.8,.2,1);pointer-events:none}
 .album-divider{height:1px;width:100%;margin:20px 0 13px;background:rgba(61,88,119,.24)}
 .add-photos{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:0 auto 12px;padding:6px 12px;border:1px solid var(--blue);border-radius:999px;background:transparent;color:var(--blue);font:inherit;font-size:14px;line-height:1.2;text-decoration:none;cursor:pointer;transition:background .2s,color .2s} .add-photos:hover{background:var(--blue);color:#fff9e9}
-.album-date-numeric{margin:0;color:#ad642b;font-size:.82rem;letter-spacing:.04em}
+.album-date-numeric{display:none}
 @keyframes modalFade{from{opacity:0}to{opacity:1}}
 @keyframes modalRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:650px){
@@ -90,7 +90,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
  .together-section{padding:22px 10px 28px}
  .together-figures{gap:6px}
  .together-kirby{width:clamp(72px,20vw,112px);height:clamp(72px,20vw,112px)}
- .return-button{min-height:66px;padding:10px 12px}
+ .return-button{min-height:42px;padding:6px 10px;flex-basis:140px;max-width:140px}
  .dialog{width:min(540px,100%);max-height:min(88vh,760px);padding:22px 20px 24px}
  .album-image{width:min(100%,360px);height:auto;aspect-ratio:3/4;max-height:58vh}
  .arrow{display:none}
@@ -132,7 +132,7 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 <section class="flower-section" id="flowerSection" hidden><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"></div></section>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Álbum de fotografías">
-<div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer" id="photoViewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><p class="photo-count" id="photoCount"></p><div class="album-divider" aria-hidden="true"></div><button class="add-photos" id="addAlbumPhotos" type="button">📷 Añadir fotos</button><p class="album-date-numeric" id="albumDateNumeric"></p></div>
+<div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer" id="photoViewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><div class="photo-count" id="photoCount" aria-live="polite"></div><div class="album-divider" aria-hidden="true"></div><button class="add-photos" id="addAlbumPhotos" type="button">📷 Añadir fotos</button><p class="album-date-numeric" id="albumDateNumeric"></p></div>
 </div>
 <div class="modal" id="uploadModal" role="dialog" aria-modal="true" aria-label="Añadir fotografías">
  <div class="dialog">
@@ -239,8 +239,8 @@ function updateTogetherCounter(){
  $('togetherCount').textContent='Llevamos '+days+' días juntos';
 }
 
-function openAlbum(album){state.activePhotos=[...(album.calendar_photos||[])].sort((a,b)=>a.sort_order-b.sort_order);state.activeIndex=0;state.activeAlbumDate=album.album_date;state.previousFocus=document.activeElement;const [y,m,d]=album.album_date.split('-');$('albumDateTitle').textContent=Number(d)+' de '+monthNames[Number(m)-1][0].toUpperCase()+monthNames[Number(m)-1].slice(1);$('albumDateNumeric').textContent=d+'/'+m+'/'+y;$('modal').classList.add('open');document.body.style.overflow='hidden';showPhoto();$('close').focus()}
-function showPhoto(){const p=state.activePhotos[state.activeIndex];if(!p)return;$('albumImage').src=publicPhoto(p.storage_path);$('albumImage').alt=p.alt_text||'Fotografía '+(state.activeIndex+1);$('photoCount').textContent=(state.activeIndex+1)+' | '+state.activePhotos.length;$('back').disabled=state.activePhotos.length<2;$('forward').disabled=state.activePhotos.length<2}
+function openAlbum(album){state.activePhotos=[...(album.calendar_photos||[])].sort((a,b)=>a.sort_order-b.sort_order);state.activeIndex=0;state.activeAlbumDate=album.album_date;state.previousFocus=document.activeElement;const [y,m,d]=album.album_date.split('-');$('albumDateTitle').textContent=Number(d)+' de '+monthNames[Number(m)-1][0].toUpperCase()+monthNames[Number(m)-1].slice(1);$('albumDateNumeric').textContent='';$('modal').classList.add('open');document.body.style.overflow='hidden';showPhoto();$('close').focus()}
+function showPhoto(){const p=state.activePhotos[state.activeIndex];if(!p)return;$('albumImage').src=publicPhoto(p.storage_path);$('albumImage').alt=p.alt_text||'Fotografía '+(state.activeIndex+1);const count=$('photoCount');if(Number(count.dataset.count)!==state.activePhotos.length){count.dataset.count=state.activePhotos.length;count.innerHTML='<div class="photo-progress">'+state.activePhotos.map(()=>'<span class="photo-dot" aria-hidden="true"></span>').join('')+'<span class="photo-heart" aria-hidden="true">♥</span></div>';}const progress=count.firstElementChild;progress.style.setProperty('--index',state.activeIndex);count.setAttribute('aria-label','Fotografía '+(state.activeIndex+1)+' de '+state.activePhotos.length);$('back').disabled=state.activePhotos.length<2;$('forward').disabled=state.activePhotos.length<2}
 function closeAlbum(){$('modal').classList.remove('open');document.body.style.overflow='';if(state.previousFocus)state.previousFocus.focus()}
 function movePhoto(delta){state.activeIndex=(state.activeIndex+delta+state.activePhotos.length)%state.activePhotos.length;showPhoto()}
 $('prev').onclick=()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()-1,1);loadMonth()};
