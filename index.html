@@ -268,21 +268,21 @@ function renderCalendar(){
   for(let i=0;i<7;i++){
    const date=new Date(cursor),key=dateKey(date),day=date.getDate(),album=state.albums.find(a=>a.album_date===key),photos=(album?.calendar_photos||[]).sort((a,b)=>a.sort_order-b.sort_order);
    const cell=document.createElement('div');cell.className='day';
-   const birthdayLabel=date.getMonth()===7&&day===11?'I':date.getMonth()===9&&day===21?'B':'';
+   const birthdayLabel=(date.getMonth()===7&&day===11)||(date.getMonth()===9&&day===21);
    if(day===2)cell.classList.add('special-day');
    if(birthdayLabel)cell.classList.add('birthday-day');
    if(date.getMonth()!==state.month.getMonth())cell.classList.add('outside-month');
    if(photos.length){
     const b=document.createElement('button');b.className='day-photo';b.setAttribute('aria-label','Abrir álbum del '+formatDate(key));const img=document.createElement('img');img.src=publicPhoto(photos[0].storage_path);img.alt=photos[0].alt_text||'Recuerdo del '+formatDate(key);b.append(img);b.addEventListener('click',()=>openAlbum(album));cell.append(b);
     const n=document.createElement('button');n.type='button';n.className='day-number';
-    if(birthdayLabel){n.classList.add('birthday-number');const prefix=document.createElement('span');prefix.className='birthday-prefix';prefix.textContent=birthdayLabel;n.append(prefix);n.append(createCakeSymbol());}
+    if(birthdayLabel){n.classList.add('birthday-number');n.append(createCakeSymbol());}
     else n.textContent=day===2?'♥':day;
     n.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));n.addEventListener('click',()=>startUploadForDate(key));cell.append(n);
    }else{
     cell.classList.add('empty-selectable');cell.setAttribute('role','button');cell.setAttribute('tabindex','0');cell.setAttribute('aria-label','Añadir fotografías al '+formatDate(key));
     const placeholder=document.createElement('div');placeholder.className='day-photo day-photo-placeholder';placeholder.setAttribute('aria-hidden','true');cell.append(placeholder);
     const n=document.createElement('span');n.className='day-number-only';
-    if(birthdayLabel){n.classList.add('birthday-number');const prefix=document.createElement('span');prefix.className='birthday-prefix';prefix.textContent=birthdayLabel;n.append(prefix);n.append(createCakeSymbol());}
+    if(birthdayLabel){n.classList.add('birthday-number');n.append(createCakeSymbol());}
     else n.textContent=day===2?'♥':day;
     cell.append(n);
     cell.addEventListener('click',()=>startUploadForDate(key));
