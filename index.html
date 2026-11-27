@@ -138,7 +138,6 @@ h1{margin:5px 0;color:var(--blue);font-size:clamp(1.15rem,5.1vw,2.35rem);font-we
 <img class="together-kirby" src="assets/6723f53890d821aefdd3f3c2a4ed4c09.gif" alt="Kirby con auriculares" onerror="this.hidden=true">
 </div>
 </section>
-<section class="flower-section" id="flowerSection" hidden><h2 class="flower-heading">Nuestros recuerdos con flores</h2><div class="flower-strip" id="flowerStrip"></div></section>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Álbum de fotografías">
 <div class="dialog"><button class="close" id="close" aria-label="Cerrar">×</button><h2 class="album-date" id="albumDateTitle"></h2><div class="viewer" id="photoViewer"><button class="arrow" id="back" aria-label="Fotografía anterior">‹</button><img class="album-image" id="albumImage" alt=""><button class="arrow" id="forward" aria-label="Fotografía siguiente">›</button></div><div class="photo-count" id="photoCount" aria-live="polite"></div><button class="add-photos" id="addAlbumPhotos" type="button"><svg class="add-photo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 9v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 18V9A1.5 1.5 0 0 1 4 7.5Z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Añadir fotos</button></div>
@@ -189,7 +188,7 @@ async function loadMonth(){
  const {data:albums,error}=await db.from('calendar_albums').select('id,album_date,title,is_flower_gift,calendar_photos(id,storage_path,alt_text,sort_order)').gte('album_date',start).lte('album_date',end).order('album_date');
  if(error){$('loading').textContent='No se pudieron cargar los recuerdos. '+error.message;return}
  state.albums=albums||[];state.photos=state.albums.flatMap(a=>(a.calendar_photos||[]).map(p=>({...p,album_date:a.album_date,is_flower_gift:a.is_flower_gift})));
- renderCalendar();renderFlowers();$('loading').hidden=true;
+ renderCalendar();$('loading').hidden=true;
 }
 function openUploadModal(key=''){
  const selectedDate=key||dateKey(new Date());
@@ -234,13 +233,6 @@ function renderCalendar(){
   grid.append(week);
  }
 }
-function renderFlowers(){
- const strip=$('flowerStrip');strip.innerHTML='';
- const featured=state.albums.filter(a=>a.is_flower_gift&&(a.calendar_photos||[]).length).sort((a,b)=>a.album_date.localeCompare(b.album_date));
- $('flowerSection').hidden=!featured.length;
- if(!featured.length)return;
- featured.forEach(a=>{const p=[...a.calendar_photos].sort((x,y)=>x.sort_order-y.sort_order)[0],b=document.createElement('button');b.className='flower-card';const img=document.createElement('img');img.src=publicPhoto(p.storage_path);img.alt='';const label=document.createElement('span');label.textContent=formatDate(a.album_date);b.append(img,label);b.addEventListener('click',()=>openAlbum(a));strip.append(b)})
-}
 function updateTogetherCounter(){
  const start=new Date(2026,9,2);start.setHours(0,0,0,0);
  const today=new Date();today.setHours(0,0,0,0);
@@ -248,8 +240,10 @@ function updateTogetherCounter(){
  $('togetherCount').textContent='Llevamos '+days+' días juntos';
 }
 
-function openAlbum(album){state.activePhotos=[...(album.calendar_photos||[])].sort((a,b)=>a.sort_order-b.sort_order);state.activeIndex=0;state.activeAlbumDate=album.album_date;state.previousFocus=document.activeElement;const [y,m,d]=album.album_date.split('-');$('albumDateTitle').textContent=Number(d)+' de '+monthNames[Number(m)-1][0].toUpperCase()+monthNames[Number(m)-1].slice(1);$('modal').classList.add('open');document.body.style.overflow='hidden';showPhoto();$('close').focus()}
-function showPhoto(){const p=state.activePhotos[state.activeIndex];if(!p)return;$('albumImage').src=publicPhoto(p.storage_path);$('albumImage').alt=p.alt_text||'Fotografía '+(state.activeIndex+1);const count=$('photoCount');if(Number(count.dataset.count)!==state.activePhotos.length){count.dataset.count=state.activePhotos.length;count.innerHTML='<div class="photo-progress">'+state.activePhotos.map(()=>'<span class="photo-dot" aria-hidden="true"></span>').join('')+'<span class="photo-heart" aria-hidden="true">♥</span></div>';}const progress=count.firstElementChild;progress.style.setProperty('--index',state.activeIndex);count.setAttribute('aria-label','Fotografía '+(state.activeIndex+1)+' de '+state.activePhotos.length);$('back').disabled=state.activePhotos.length<2;$('forward').disabled=state.activePhotos.length<2}
+function openAlbum(album){state.activePhotos=[...(album.calendar_photos||[])].sort((a,b)=>a.sort_order-b.sort_order);state.activeIndex=0;state.activeAlbumDate=album.album_date;state.previousFocus=document.activeElement;const [y,m,d]=album.album_date.split('-');$('albumDateTitle').textContent=Number(d)+' de '+monthNames[Number(m)-1][0].toUpperCase()+monthNames[Number(m)-1].slice(1);$('modal').classList.add('open');document.body.style.overflow='hidden';showPhoto();preloadPhoto(1);$('close').focus()}
+const photoPreloadCache=new Map();
+function preloadPhoto(index){if(index<0||index>=state.activePhotos.length)return;const url=publicPhoto(state.activePhotos[index].storage_path);if(photoPreloadCache.has(url))return;const image=new Image();image.decoding='async';image.src=url;photoPreloadCache.set(url,image);if(image.decode)image.decode().catch(()=>{})}
+function showPhoto(){const p=state.activePhotos[state.activeIndex];if(!p)return;const image=$('albumImage');image.decoding='async';image.loading='eager';image.src=publicPhoto(p.storage_path);image.alt=p.alt_text||'Fotografía '+(state.activeIndex+1);const count=$('photoCount');if(Number(count.dataset.count)!==state.activePhotos.length){count.dataset.count=state.activePhotos.length;count.innerHTML='<div class="photo-progress">'+state.activePhotos.map(()=>'<span class="photo-dot" aria-hidden="true"></span>').join('')+'<span class="photo-heart" aria-hidden="true">♥</span></div>';}const progress=count.firstElementChild;progress.style.setProperty('--index',state.activeIndex);count.setAttribute('aria-label','Fotografía '+(state.activeIndex+1)+' de '+state.activePhotos.length);$('back').disabled=state.activePhotos.length<2;$('forward').disabled=state.activePhotos.length<2;preloadPhoto(state.activeIndex+1);preloadPhoto(state.activeIndex-1)}
 function closeAlbum(){$('modal').classList.remove('open');document.body.style.overflow='';if(state.previousFocus)state.previousFocus.focus()}
 function movePhoto(delta){state.activeIndex=(state.activeIndex+delta+state.activePhotos.length)%state.activePhotos.length;showPhoto()}
 $('prev').onclick=()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()-1,1);loadMonth()};
